@@ -1,0 +1,17 @@
+# Example .sentinel policy file
+
+import "tfplan/v2" as tfplan
+
+# Rule: Disallow creation of AWS S3 buckets that are publicly accessible
+public_buckets = rule {
+  all tfplan.resource_changes as _, rc {
+    rc.type is "aws_s3_bucket" and
+    (rc.change.after.acl == "public-read" or
+     rc.change.after.acl == "public-read-write") => false
+  }
+}
+
+# The main rule that must pass
+main = rule {
+  public_buckets
+}
